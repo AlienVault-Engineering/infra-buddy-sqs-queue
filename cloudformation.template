@@ -54,7 +54,7 @@
       }
     },
 
-    "CreateSQSIAMRole-Read": {
+    "CreateSQSIAMRoleRead": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "Policies": [
@@ -79,7 +79,7 @@
       }
     },
 
-    "CreateSQSIAMRole-Write": {
+    "CreateSQSIAMRoleWrite": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "Policies": [
@@ -101,7 +101,7 @@
       }
     },
 
-    "CreateSQSIAMRole-Deadletter-Read": {
+    "CreateSQSIAMRoleDeadletterRead": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "Policies": [
@@ -126,7 +126,7 @@
       }
     },
 
-    "CreateSQSIAMRole-Deadletter-Write": {
+    "CreateSQSIAMRoleDeadletterWrite": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "Policies": [
