@@ -1,0 +1,20 @@
+{
+  "SQS_QUEUENAME": {
+    "type": "property",
+    "key": "SQS_QUEUENAME",
+    "default": "listener"
+  }, "SQS_VISIBILITY_TIMEOUT": {
+    "type": "property",
+    "key": "SQS_VISIBILITY_TIMEOUT",
+    "default": 30
+  }, "SQS_MESSAGE_RETENTION_PERIOD": {
+    "type": "property",
+    "key": "SQS_MESSAGE_RETENTION_PERIOD",
+    "default": 345600
+  }, "SQS_REDRIVE_MAX_RECEIVE_COUNT": {
+    "type": "property",
+    "key": "SQS_REDRIVE_MAX_RECEIVE_COUNT",
+    "default": 5
+  }
+}
+  

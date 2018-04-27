@@ -1,0 +1,26 @@
+[
+    {
+        "ParameterKey": "Environment",
+        "ParameterValue": "${ENVIRONMENT}"
+    },
+    {
+        "ParameterKey": "ServiceStack",
+        "ParameterValue": "${SERVICE_STACK_NAME}"
+    },
+    {
+        "ParameterKey": "VisibilityTimeout",
+        "ParameterValue": "${SQS_VISIBILITY_TIMEOUT}"
+    },
+    {
+        "ParameterKey": "QueueName",
+        "ParameterValue": "${SQS_QUEUENAME}"
+    },
+    {
+        "ParameterKey": "MessageRetentionPeriod",
+        "ParameterValue": "${SQS_MESSAGE_RETENTION_PERIOD}"
+    },
+        {
+        "ParameterKey": "RedriveMaxReceiveCount",
+        "ParameterValue": "${SQS_REDRIVE_MAX_RECEIVE_COUNT}"
+    }
+]

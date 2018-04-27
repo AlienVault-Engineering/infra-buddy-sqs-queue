@@ -1,0 +1,151 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Parameters": {
+    "Environment": {
+      "Description": "The environment parameter for the docker container",
+      "Type": "String"
+    },
+    "Application": {
+      "Description": "Logical name (Application) for this CF stack",
+      "Type": "String"
+    },
+    "ServiceStack": {
+      "Description": "Service stack name to create policy for",
+      "Type": "String"
+    },
+    "QueueName": {
+      "Description": "The SQS queue to monitor",
+      "Type": "String"
+    },
+    "VisibilityTimeout": {
+      "Description": "Visibility Timeout",
+      "Type": "Number"
+    }
+    "MessageRetentionPeriod": {
+      "Description": "Message retention period (in seconds)",
+      "Type": "Number"
+    }
+    "RedriveMaxReceiveCount": {
+      "Description": "MaxReceiveCount for redrive policy",
+      "Type": "Number"
+    }
+  },
+  "Resources": {
+
+    "CreateSQSQueue-Deadletter": {
+      "Type" : "AWS::SQS::Queue",
+      "Properties" : {
+        "QueueName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"},
+        "MessageRetentionPeriod": {"Ref": "MessageRetentionPeriod"}
+      }
+    },
+
+    "CreateSQSQueue": {
+      "Type" : "AWS::SQS::Queue",
+      "Properties" : {
+        "QueueName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"},
+        "VisibilityTimeout": {"Ref": "VisibilityTimeout"},
+        "MessageRetentionPeriod": {"Ref": "MessageRetentionPeriod"},
+        "RedrivePolicy": {
+          "deadLetterTargetArn" : {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]},
+          "maxReceiveCount" : {"Ref": "RedriveMaxReceiveCount"}
+        }
+      }
+    },
+
+    "CreateSQSIAMRole-Read": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Policies": [
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:ReceiveMessage",
+                  "sqs:DeleteMessage",
+                  "sqs:DeleteMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]},
+              }
+            ]
+          }
+        ],
+        "RoleName": {
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}-Read"
+        }
+      }
+    },
+
+    "CreateSQSIAMRole-Write": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Policies": [
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:SendMessage",
+                  "sqs:SendMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]},
+              }
+            ]
+          }
+        ],
+        "RoleName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-Write"}
+      }
+    },
+
+    "CreateSQSIAMRole-Deadletter-Read": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Policies": [
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:ReceiveMessage",
+                  "sqs:DeleteMessage",
+                  "sqs:DeleteMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]},
+              }
+            ]
+          }
+        ],
+        "RoleName": {
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-Read"
+        }
+      }
+    },
+
+    "CreateSQSIAMRole-Deadletter-Write": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Policies": [
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:SendMessage",
+                  "sqs:SendMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]},
+              }
+            ]
+          }
+        ],
+        "RoleName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-Write"}
+      }
+    }
+  }
+}
