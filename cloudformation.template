@@ -21,11 +21,11 @@
     "VisibilityTimeout": {
       "Description": "Visibility Timeout",
       "Type": "Number"
-    }
+    },
     "MessageRetentionPeriod": {
       "Description": "Message retention period (in seconds)",
       "Type": "Number"
-    }
+    },
     "RedriveMaxReceiveCount": {
       "Description": "MaxReceiveCount for redrive policy",
       "Type": "Number"
@@ -68,7 +68,7 @@
                   "sqs:DeleteMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]},
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]}
               }
             ]
           }
@@ -92,7 +92,7 @@
                   "sqs:SendMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]},
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]}
               }
             ]
           }
@@ -115,7 +115,7 @@
                   "sqs:DeleteMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]},
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]}
               }
             ]
           }
@@ -139,7 +139,7 @@
                   "sqs:SendMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]},
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]}
               }
             ]
           }
