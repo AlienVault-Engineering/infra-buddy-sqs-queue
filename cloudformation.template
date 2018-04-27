@@ -33,7 +33,7 @@
   },
   "Resources": {
 
-    "CreateSQSQueue-Deadletter": {
+    "CreateSQSQueueDeadletter": {
       "Type" : "AWS::SQS::Queue",
       "Properties" : {
         "QueueName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"},
@@ -48,7 +48,7 @@
         "VisibilityTimeout": {"Ref": "VisibilityTimeout"},
         "MessageRetentionPeriod": {"Ref": "MessageRetentionPeriod"},
         "RedrivePolicy": {
-          "deadLetterTargetArn" : {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]},
+          "deadLetterTargetArn" : {"Fn::GetAtt": ["CreateSQSQueueDeadletter", "Arn"]},
           "maxReceiveCount" : {"Ref": "RedriveMaxReceiveCount"}
         }
       }
@@ -115,7 +115,7 @@
                   "sqs:DeleteMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]}
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueueDeadletter", "Arn"]}
               }
             ]
           }
@@ -139,7 +139,7 @@
                   "sqs:SendMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue-Deadletter", "Arn"]}
+                "Resource": {"Fn::GetAtt": ["CreateSQSQueueDeadletter", "Arn"]}
               }
             ]
           }
