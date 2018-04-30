@@ -10,10 +10,6 @@
       "Description": "Logical name (Application) for this CF stack",
       "Type": "String"
     },
-    "Role": {
-      "Description": "Service role",
-      "Type": "String"
-    },
     "QueueName": {
       "Description": "The SQS queue to monitor",
       "Type": "String"
@@ -37,7 +33,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter"
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"
         },
         "MessageRetentionPeriod": {
           "Ref": "MessageRetentionPeriod"
@@ -49,7 +45,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}"
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}"
         },
         "VisibilityTimeout": {
           "Ref": "VisibilityTimeout"
@@ -93,7 +89,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter-write"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-write"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -138,7 +134,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter-read"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-read"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -184,7 +180,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}write"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}write"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -229,7 +225,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-read"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-read"},
             "PolicyDocument": {
               "Statement": [
                 {
