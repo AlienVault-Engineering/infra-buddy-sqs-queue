@@ -93,21 +93,24 @@
         "Path": "/",
         "Policies": [
           {
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:SendMessage",
-                  "sqs:SendMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {
-                  "Fn::GetAtt": [
-                    "CreateSQSQueueDeadletter",
-                    "Arn"
-                  ]
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-write"},
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "sqs:SendMessage",
+                    "sqs:SendMessageBatch"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "CreateSQSQueueDeadletter",
+                      "Arn"
+                    ]
+                  }
                 }
-              }
-            ]
+              ]
+            }
           }
         ]
       }
@@ -135,107 +138,25 @@
         "Path": "/",
         "Policies": [
           {
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:ReceiveMessage",
-                  "sqs:DeleteMessage",
-                  "sqs:DeleteMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {
-                  "Fn::GetAtt": [
-                    "CreateSQSQueueDeadletter",
-                    "Arn"
-                  ]
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-read"},
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:DeleteMessageBatch"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "CreateSQSQueueDeadletter",
+                      "Arn"
+                    ]
+                  }
                 }
-              }
-            ]
-          }
-        ]
-      }
-    },
-
-    "CreateSQSIAMRoleWrite": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "ec2.amazonaws.com",
-                  "ecs.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
               ]
             }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-          {
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:SendMessage",
-                  "sqs:SendMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {
-                  "Fn::GetAtt": [
-                    "CreateSQSQueue",
-                    "Arn"
-                  ]
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-
-    "CreateSQSIAMRoleRead": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [
-                  "ec2.amazonaws.com",
-                  "ecs.amazonaws.com"
-                ]
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-          {
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:ReceiveMessage",
-                  "sqs:DeleteMessage",
-                  "sqs:DeleteMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {
-                  "Fn::GetAtt": [
-                    "CreateSQSQueue",
-                    "Arn"
-                  ]
-                }
-              }
-            ]
           }
         ]
       }
