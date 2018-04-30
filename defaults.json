@@ -2,7 +2,7 @@
   "SQS_QUEUENAME": {
     "type": "property",
     "key": "SQS_QUEUENAME",
-    "default": "listener"
+    "default": "consume"
   }, "SQS_VISIBILITY_TIMEOUT": {
     "type": "property",
     "key": "SQS_VISIBILITY_TIMEOUT",

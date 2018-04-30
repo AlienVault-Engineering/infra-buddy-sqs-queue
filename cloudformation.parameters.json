@@ -1,7 +1,15 @@
 [
   {
-    "ParameterKey": "StackName",
-    "ParameterValue": "${ECS_SERVICE_STACK_NAME}"
+    "ParameterKey": "Environment",
+    "ParameterValue": "${ENVIRONMENT}"
+  },
+  {
+    "ParameterKey": "Application",
+    "ParameterValue": "${APPLICATION}"
+  },
+  {
+    "ParameterKey": "Role",
+    "ParameterValue": "${ROLE}"
   },
   {
     "ParameterKey": "VisibilityTimeout",

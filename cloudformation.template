@@ -2,8 +2,16 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "",
   "Parameters": {
-    "StackName": {
-      "Description": "Service stack name",
+    "Environment": {
+      "Description": "The environment parameter for the docker container",
+      "Type": "String"
+    },
+    "Application": {
+      "Description": "Logical name (Application) for this CF stack",
+      "Type": "String"
+    },
+    "Role": {
+      "Description": "Service role",
       "Type": "String"
     },
     "QueueName": {
@@ -29,7 +37,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${StackName}-${QueueName}-deadletter"
+          "Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter"
         },
         "MessageRetentionPeriod": {
           "Ref": "MessageRetentionPeriod"
@@ -41,7 +49,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${StackName}-${QueueName}"
+          "Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}"
         },
         "VisibilityTimeout": {
           "Ref": "VisibilityTimeout"
@@ -85,7 +93,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}-deadletter-write"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter-write"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -130,7 +138,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}-deadletter-read"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter-read"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -176,7 +184,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}write"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}write"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -221,7 +229,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}-read"},
+            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-read"},
             "PolicyDocument": {
               "Statement": [
                 {
