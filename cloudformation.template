@@ -152,7 +152,7 @@
           }
         ]
       }
-    }
+    },
 
     "CreateSQSIAMRoleWrite": {
       "Type": "AWS::IAM::Role",
