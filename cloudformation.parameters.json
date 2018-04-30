@@ -1,15 +1,7 @@
 [
   {
-    "ParameterKey": "Environment",
-    "ParameterValue": "${ENVIRONMENT}"
-  },
-  {
-    "ParameterKey": "Application",
-    "ParameterValue": "${APPLICATION}"
-  },
-  {
-    "ParameterKey": "Role",
-    "ParameterValue": "${ROLE}"
+    "ParameterKey": "StackName",
+    "ParameterValue": "${STACK_NAME}"
   },
   {
     "ParameterKey": "VisibilityTimeout",

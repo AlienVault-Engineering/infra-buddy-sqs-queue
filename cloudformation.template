@@ -2,16 +2,8 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "",
   "Parameters": {
-    "Environment": {
-      "Description": "The environment parameter for the docker container",
-      "Type": "String"
-    },
-    "Application": {
-      "Description": "Logical name (Application) for this CF stack",
-      "Type": "String"
-    },
-    "Role": {
-      "Description": "Service role",
+    "StackName": {
+      "Description": "Service stack name",
       "Type": "String"
     },
     "QueueName": {
@@ -37,7 +29,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter"
+          "Fn::Sub": "${StackName}-${QueueName}-deadletter"
         },
         "MessageRetentionPeriod": {
           "Ref": "MessageRetentionPeriod"
@@ -49,7 +41,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}"
+          "Fn::Sub": "${StackName}-${QueueName}"
         },
         "VisibilityTimeout": {
           "Ref": "VisibilityTimeout"
@@ -93,7 +85,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter-write"},
+            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}-deadletter-write"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -138,7 +130,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": {"Fn::Sub": "${Environment}-${Application}-${Role}-${QueueName}-deadletter-read"},
+            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}-deadletter-read"},
             "PolicyDocument": {
               "Statement": [
                 {
@@ -161,6 +153,98 @@
         ]
       }
     }
+
+    "CreateSQSIAMRoleWrite": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "ecs.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}write"},
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "sqs:SendMessage",
+                    "sqs:SendMessageBatch"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "CreateSQSQueue",
+                      "Arn"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "CreateSQSIAMRoleRead": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "ecs.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": {"Fn::Sub": "${StackName}-${QueueName}-read"},
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "sqs:ReceiveMessage",
+                    "sqs:DeleteMessage",
+                    "sqs:DeleteMessageBatch"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "CreateSQSQueue",
+                      "Arn"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+
 
   }
 }
