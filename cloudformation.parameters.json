@@ -8,8 +8,8 @@
     "ParameterValue": "${APPLICATION}"
   },
   {
-    "ParameterKey": "ServiceStack",
-    "ParameterValue": "${SERVICE_STACK_NAME}"
+    "ParameterKey": "Role",
+    "ParameterValue": "${ROLE}"
   },
   {
     "ParameterKey": "VisibilityTimeout",
