@@ -49,7 +49,7 @@
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
-          "Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}"
         },
         "VisibilityTimeout": {
           "Ref": "VisibilityTimeout"
