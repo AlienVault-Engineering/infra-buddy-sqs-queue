@@ -34,94 +34,39 @@
   "Resources": {
 
     "CreateSQSQueueDeadletter": {
-      "Type" : "AWS::SQS::Queue",
-      "Properties" : {
-        "QueueName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"},
-        "MessageRetentionPeriod": {"Ref": "MessageRetentionPeriod"}
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": {
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"
+        },
+        "MessageRetentionPeriod": {
+          "Ref": "MessageRetentionPeriod"
+        }
       }
     },
 
     "CreateSQSQueue": {
-      "Type" : "AWS::SQS::Queue",
-      "Properties" : {
-        "QueueName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"},
-        "VisibilityTimeout": {"Ref": "VisibilityTimeout"},
-        "MessageRetentionPeriod": {"Ref": "MessageRetentionPeriod"},
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": {
+          "Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter"
+        },
+        "VisibilityTimeout": {
+          "Ref": "VisibilityTimeout"
+        },
+        "MessageRetentionPeriod": {
+          "Ref": "MessageRetentionPeriod"
+        },
         "RedrivePolicy": {
-          "deadLetterTargetArn" : {"Fn::GetAtt": ["CreateSQSQueueDeadletter", "Arn"]},
-          "maxReceiveCount" : {"Ref": "RedriveMaxReceiveCount"}
-        }
-      }
-    },
-
-    "CreateSQSIAMRoleRead": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "Policies": [
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:ReceiveMessage",
-                  "sqs:DeleteMessage",
-                  "sqs:DeleteMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]}
-              }
+          "deadLetterTargetArn": {
+            "Fn::GetAtt": [
+              "CreateSQSQueueDeadletter",
+              "Arn"
             ]
+          },
+          "maxReceiveCount": {
+            "Ref": "RedriveMaxReceiveCount"
           }
-        ],
-        "RoleName": {
-          "Fn::Sub": "${Environment}-${Application}-${QueueName}-Read"
-        }
-      }
-    },
-
-    "CreateSQSIAMRoleWrite": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "Policies": [
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:SendMessage",
-                  "sqs:SendMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueue", "Arn"]}
-              }
-            ]
-          }
-        ],
-        "RoleName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-Write"}
-      }
-    },
-
-    "CreateSQSIAMRoleDeadletterRead": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "Policies": [
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Action": [
-                  "sqs:ReceiveMessage",
-                  "sqs:DeleteMessage",
-                  "sqs:DeleteMessageBatch"
-                ],
-                "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueueDeadletter", "Arn"]}
-              }
-            ]
-          }
-        ],
-        "RoleName": {
-          "Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-Read"
         }
       }
     },
@@ -129,9 +74,25 @@
     "CreateSQSIAMRoleDeadletterWrite": {
       "Type": "AWS::IAM::Role",
       "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "ecs.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
         "Policies": [
           {
-            "Version": "2012-10-17",
             "Statement": [
               {
                 "Action": [
@@ -139,13 +100,149 @@
                   "sqs:SendMessageBatch"
                 ],
                 "Effect": "Allow",
-                "Resource": {"Fn::GetAtt": ["CreateSQSQueueDeadletter", "Arn"]}
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "CreateSQSQueueDeadletter",
+                    "Arn"
+                  ]
+                }
               }
             ]
           }
-        ],
-        "RoleName": {"Fn::Sub": "${Environment}-${Application}-${QueueName}-deadletter-Write"}
+        ]
+      }
+    },
+
+    "CreateSQSIAMRoleDeadletterRead": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "ecs.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:ReceiveMessage",
+                  "sqs:DeleteMessage",
+                  "sqs:DeleteMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "CreateSQSQueueDeadletter",
+                    "Arn"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    "CreateSQSIAMRoleWrite": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "ecs.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:SendMessage",
+                  "sqs:SendMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "CreateSQSQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    "CreateSQSIAMRoleRead": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com",
+                  "ecs.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "Statement": [
+              {
+                "Action": [
+                  "sqs:ReceiveMessage",
+                  "sqs:DeleteMessage",
+                  "sqs:DeleteMessageBatch"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::GetAtt": [
+                    "CreateSQSQueue",
+                    "Arn"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       }
     }
+
   }
 }
+
+
+
