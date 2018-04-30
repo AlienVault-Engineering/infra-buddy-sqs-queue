@@ -8,10 +8,6 @@
     "ParameterValue": "${APPLICATION}"
   },
   {
-    "ParameterKey": "Role",
-    "ParameterValue": "${ROLE}"
-  },
-  {
     "ParameterKey": "VisibilityTimeout",
     "ParameterValue": "${SQS_VISIBILITY_TIMEOUT}"
   },
