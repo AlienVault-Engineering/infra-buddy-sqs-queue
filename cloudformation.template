@@ -29,7 +29,7 @@
   },
   "Resources": {
 
-    "CreateSQSQueueDeadletter": {
+    "CreateSQSDeadletter": {
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
@@ -41,7 +41,7 @@
       }
     },
 
-    "CreateSQSQueue": {
+    "CreateSQS": {
       "Type": "AWS::SQS::Queue",
       "Properties": {
         "QueueName": {
@@ -56,7 +56,7 @@
         "RedrivePolicy": {
           "deadLetterTargetArn": {
             "Fn::GetAtt": [
-              "CreateSQSQueueDeadletter",
+              "CreateSQSDeadletter",
               "Arn"
             ]
           },
@@ -82,7 +82,7 @@
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "CreateSQSQueue",
+                  "CreateSQS",
                   "Arn"
                 ]
               }
@@ -107,7 +107,7 @@
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "CreateSQSQueue",
+                  "CreateSQS",
                   "Arn"
                 ]
               }
@@ -131,7 +131,7 @@
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "CreateSQSDeadletterQueue",
+                  "CreateSQSDeadletter",
                   "Arn"
                 ]
               }
@@ -156,7 +156,7 @@
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "CreateSQSDeadletterQueue",
+                  "CreateSQSDeadletter",
                   "Arn"
                 ]
               }
