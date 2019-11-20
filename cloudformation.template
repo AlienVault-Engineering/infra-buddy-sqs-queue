@@ -73,6 +73,7 @@
       "Properties" : {
         "Path" : "/",
         "PolicyDocument" : {
+          "Version": "2012-10-17",
           "Statement": [
             {
               "Action": [
@@ -97,6 +98,7 @@
       "Properties" : {
         "Path" : "/",
         "PolicyDocument" : {
+          "Version": "2012-10-17",
           "Statement": [
             {
               "Action": [
@@ -122,6 +124,7 @@
       "Properties" : {
         "Path" : "/",
         "PolicyDocument" : {
+          "Version": "2012-10-17",
           "Statement": [
             {
               "Action": [
@@ -146,6 +149,7 @@
       "Properties" : {
         "Path" : "/",
         "PolicyDocument" : {
+          "Version": "2012-10-17",
           "Statement": [
             {
               "Action": [
